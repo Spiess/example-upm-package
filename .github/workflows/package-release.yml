@@ -14,12 +14,13 @@ jobs:
         name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: main
+          path: package
       # Extract package json
       - id: json
         name: Extract package json
         run: |
-          package_json=`cat package.json`
+          cat package/package.json
+          package_json=`cat package/package.json`
           package_json="${package_json//'%'/'%25'}"
           package_json="${package_json//$'\n'/'%0A'}"
           package_json="${package_json//$'\r'/'%0D'}"
@@ -41,8 +42,6 @@ jobs:
         name: Prepare package
         if: ${{ steps.latesttag.outputs.tag != steps.version.outputs.package_tag }}
         run: |
-          mkdir package
-          mv !(package) package
           tar -czvf example-upm-package.tgz package
       # Upload artifact
       - id: create-release
