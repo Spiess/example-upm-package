@@ -1,0 +1,48 @@
+name: Package Release
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'package.json'
+jobs:
+  Package-Artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout source code
+      - id: checkout-code
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+      # Extract package version
+      - id: version
+        name: Extract version
+        run: |
+          package_info=`cat package.json`
+          package_version="${{fromJson($package_info).version}}"
+          echo "package_version=$package_version" >> $GITHUB_OUTPUT
+          echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
+      - id: latesttag
+        name: Get latest tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        with:
+          fallback: v0.0.0
+      # Rename and tar package
+      - id: prepare-package
+        name: Prepare package
+        if: ${{ steps.latesttag.outputs.tag != steps.version.outputs.package_tag }}
+        run: |
+          mkdir package
+          mv !(package) package
+          tar -czvf example-upm-package.tgz package
+      # Upload artifact
+      - id: create-release
+        name: GH Release
+        if: ${{ steps.latesttag.outputs.tag != steps.version.outputs.package_tag }}
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          name: Release ${{ steps.version.outputs.package_version }}
+          tag_name: ${{ steps.version.outputs.package_tag }}
+          files: |
+            example-upm-package.tgz
