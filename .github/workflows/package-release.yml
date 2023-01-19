@@ -20,10 +20,8 @@ jobs:
         name: Extract package json
         run: |
           package_json=`cat package/package.json`
-          package_json="${package_json//'%'/'%25'}"
-          package_json="${package_json//$'\n'/'%0A'}"
-          package_json="${package_json//$'\r'/'%0D'}"
-          echo $package_json
+          package_json="${package_json//$'\n'/''}"
+          package_json="${package_json//$'\r'/''}"
           echo "package_json=$package_json" >> GITHUB_OUTPUT
       # Extract package version
       - id: version
