@@ -21,6 +21,7 @@ jobs:
         run: |
           package_json=`cat package.json`
           echo "package_json=$package_json" >> GITHUB_OUTPUT
+          echo ${{ steps.version.outputs.package_json }}
           package_version="${{fromJson(steps.version.outputs.package_json).version}}"
           echo "package_version=$package_version" >> $GITHUB_OUTPUT
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
