@@ -20,8 +20,10 @@ jobs:
         name: Extract version
         run: |
           package_json=`cat package.json`
+          package_json="${package_json//'%'/'%25'}"
+          package_json="${package_json//$'\n'/'%0A'}"
+          package_json="${package_json//$'\r'/'%0D'}"
           echo "package_json=$package_json" >> GITHUB_OUTPUT
-          echo ${{ steps.version.outputs.package_json }}
           package_version="${{fromJson(steps.version.outputs.package_json).version}}"
           echo "package_version=$package_version" >> $GITHUB_OUTPUT
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
