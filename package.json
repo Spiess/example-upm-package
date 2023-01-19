@@ -1,0 +1,11 @@
+{
+  "name": "example-upm-package",
+  "version": "0.0.0",
+  "displayName": "Example UPM Package",
+  "description": "Unity Package Manager example package.",
+  "unity": "2021.3",
+  "author": {
+    "name": "Florian Spiess",
+    "email": "florian.spiess@unibas.ch"
+  }
+}
