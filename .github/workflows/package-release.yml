@@ -22,7 +22,7 @@ jobs:
           package_json=`cat package/package.json`
           package_json="${package_json//$'\n'/''}"
           package_json="${package_json//$'\r'/''}"
-          echo "package_json=$package_json" >> GITHUB_OUTPUT
+          echo "package_json=$package_json" >> $GITHUB_OUTPUT
       # Extract package version
       - id: version
         name: Extract version
