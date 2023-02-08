@@ -33,13 +33,11 @@ jobs:
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
       - id: latesttag
         name: Get latest tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        with:
-          fallback: v0.0.0
+        uses: younited/get-previous-tag-action@v1.0.0
       # Rename and tar package
       - id: prepare-package
         name: Prepare package
-        if: ${{ steps.latesttag.outputs.tag != steps.version.outputs.package_tag }}
+        if: ${{ steps.latesttag.outputs.previous-tag != steps.version.outputs.package_tag }}
         run: |
           tar -czvf example-upm-package.tgz package
       # Upload artifact
