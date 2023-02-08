@@ -33,19 +33,20 @@ jobs:
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
       - id: latesttag
         name: Get latest tag
-        uses: younited/get-previous-tag-action@v1.0.0
-        with:
-          working-directory: ./package
+        working-directory: ./package
+        run: |
+          latest_tag=$(git tag -l | sort -V --reverse | sed -n 2p)
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
       # Rename and tar package
       - id: prepare-package
         name: Prepare package
-        if: ${{ steps.latesttag.outputs.previous-tag != steps.version.outputs.package_tag }}
+        if: ${{ steps.latesttag.outputs.latest_tag != steps.version.outputs.package_tag }}
         run: |
           tar -czvf example-upm-package.tgz package
       # Upload artifact
       - id: create-release
         name: GH Release
-        if: ${{ steps.latesttag.outputs.tag != steps.version.outputs.package_tag }}
+        if: ${{ steps.latesttag.outputs.latest_tag != steps.version.outputs.package_tag }}
         uses: softprops/action-gh-release@v0.1.15
         with:
           name: Release ${{ steps.version.outputs.package_version }}
