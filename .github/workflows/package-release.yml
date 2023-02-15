@@ -35,6 +35,12 @@ jobs:
           echo "package_version=$package_version" >> $GITHUB_OUTPUT
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
           echo "package_name=$package_name" >> $GITHUB_OUTPUT
+          if [[ $package_version == 0.* ]] ;
+          then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "prerelease=false" >> $GITHUB_OUTPUT
+          fi
       - id: latesttag
         name: Get latest tag
         working-directory: ./package
@@ -56,5 +62,6 @@ jobs:
           name: Release ${{ steps.version.outputs.package_version }}
           tag_name: ${{ steps.version.outputs.package_tag }}
           generate_release_notes: true
+          prerelease: ${{ steps.version.outputs.prerelease }}
           files: |
             ${{steps.version.outputs.package_name}}.tgz

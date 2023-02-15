@@ -1,6 +1,6 @@
 {
   "name": "example-upm-package",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "displayName": "Example UPM Package",
   "description": "Unity Package Manager example package.",
   "unity": "2021.3",
