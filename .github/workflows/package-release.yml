@@ -31,8 +31,10 @@ jobs:
         run: |
           echo ${{ steps.json.outputs.package_json }}
           package_version="${{fromJson(steps.json.outputs.package_json).version}}"
+          package_name="${{fromJson(steps.json.outputs.package_json).name}}"
           echo "package_version=$package_version" >> $GITHUB_OUTPUT
           echo "package_tag=v$package_version" >> $GITHUB_OUTPUT
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT
       - id: latesttag
         name: Get latest tag
         working-directory: ./package
@@ -44,7 +46,7 @@ jobs:
         name: Prepare package
         if: ${{ steps.latesttag.outputs.latest_tag != steps.version.outputs.package_tag }}
         run: |
-          tar -czvf example-upm-package.tgz package
+          tar -czvf "${{steps.version.outputs.package_name}}.tgz" package
       # Upload artifact
       - id: create-release
         name: GH Release
@@ -55,4 +57,4 @@ jobs:
           tag_name: ${{ steps.version.outputs.package_tag }}
           generate_release_notes: true
           files: |
-            example-upm-package.tgz
+            "${{steps.version.outputs.package_name}}.tgz"
